@@ -1,0 +1,41 @@
+import styles from "./clientes.modulo.css"
+
+async function buscarClientes() {
+    const resposta = await fetch("http://localhost:3000/api/clientes");
+    return await resposta.json();
+}
+export default async function Page() {
+    const clientes = await buscarClientes();
+    return (
+        <>
+            <h1>Loja Pets</h1>
+            <table className={styles.customers}>
+                <thead>
+                    <tr>
+                        <th>Nome do pet</th>
+                        <th>Nome do tutor</th>
+                        <th>sexo do pet</th>
+                        <th>Endereço</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                        clientes.map((cliente) =>
+                            <tr key={cliente.id}>
+                                <td>{cliente.nome_pet}</td>
+                                <td>{cliente.nome_tutor}</td>
+                                <td>{cliente.sexo_pet}</td>
+                                <td>{cliente.endereco}</td>
+                            </tr>
+                        )
+                    }                    
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colSpan={3}>Total clientes: 3</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </>
+    )
+}
