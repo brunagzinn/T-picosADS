@@ -17,7 +17,7 @@ export default async function handler(req, res) {
 
         const { nome_pet, nome_tutor, sexo_pet, endereco } = req.body;
 
-        db.run('insert into clientes (nome_pet, nome_tutor, sexo_pet, endereco) values (?,?,?,?)',
+        db.run('insert into clientes (id, nome_pet, nome_tutor, sexo_pet, endereco) values ((select max(id) + 1 from clientes),?,?,?,?)',
             [nome_pet, nome_tutor, sexo_pet, endereco],
             (err) => {
                 if (err) {

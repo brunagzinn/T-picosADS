@@ -2,7 +2,7 @@ const sqlite3 = require('sqlite3').verbose();
 let db = new sqlite3.Database('./data/database.db');
 
 export default async function handler(req, res) {
-
+    console.log(req.method)
     if (req.method === 'GET') {
         db.all(`select * from clientes where id = ${req.query.id}`, (err, rows) => {
             if (err) {
@@ -18,7 +18,8 @@ export default async function handler(req, res) {
         })
         return;
     } else if (req.method === 'PUT') {
-        db.run(`    update contatos 
+        const { nome_pet, nome_tutor, sexo_pet, endereco } = req.body;
+        db.run(`    update clientes 
                     set nome_pet = ?,
                         nome_tutor = ?,
                         sexo_pet = ?,
@@ -36,7 +37,7 @@ export default async function handler(req, res) {
             })
         return;
     } else if (req.method === 'DELETE') {
-        db.run(`    delete contatos 
+        db.run(`    delete from clientes 
                     where id = ?
         `,
             [req.query.id],
