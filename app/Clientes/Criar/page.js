@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import styles from "../clientes.module.css"
+import styles from "../clientes.modulo.css"
 
 export default function Criar() {
     const router = useRouter();
@@ -24,7 +24,7 @@ export default function Criar() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(clientes)
+            body: JSON.stringify(cliente)
         })
         if (resposta.ok) {
             router.push("/clientes")
@@ -54,6 +54,7 @@ export default function Criar() {
                             type="text" />
                     </div>
                     <div>
+                        <label>Sexo do Pet:</label>
                         <input
                             value={sexo_pet}
                             onChange={(event) => setSexo_Pet(event.target.value)}

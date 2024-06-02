@@ -1,8 +1,7 @@
 const sqlite3 = require('sqlite3').verbose();
 let db = new sqlite3.Database('./data/database.db');
 
-export default function handler(req, res) {
-
+export default async function handler(req, res) {
     if (req.method === 'GET') {
         db.all(`select * from clientes`, (err, rows) => {
             if (err) {
@@ -13,9 +12,12 @@ export default function handler(req, res) {
             res.json(rows);
         })
         return;
+
     } else if (req.method === 'POST') {
+
         const { nome_pet, nome_tutor, sexo_pet, endereco } = req.body;
-        db.run('insert into clientes (nome_pet, nome_tutor, sexo-pet, endereco) values (?,?,?,?)',
+
+        db.run('insert into clientes (nome_pet, nome_tutor, sexo_pet, endereco) values (?,?,?,?)',
             [nome_pet, nome_tutor, sexo_pet, endereco],
             (err) => {
                 if (err) {
@@ -25,7 +27,9 @@ export default function handler(req, res) {
                 res.status(201).end();
 
             })
+        return;
     }
+
     res.status(405).end();
     return;
 }

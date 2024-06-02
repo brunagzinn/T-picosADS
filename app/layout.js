@@ -19,7 +19,7 @@ export default function RootLayout({ children }) {
       <li><Link href="/">Home</Link>
       </li>
       <li>
-        <Link href="/Clientes">Clientes</Link>
+        <Link href="/clientes">Clientes</Link>
       </li>
       <li className='right'>
         <Link href="/sobre">Sobre</Link></li>
