@@ -1,54 +1,50 @@
-const sqlite3 = require('sqlite3').verbose();
-let db = new sqlite3.Database('./data/database.db');
+const { MongoClient } = require("mongodb");
+const { ObjectId } = require('mongodb');
+
+const uri = process.env.CONNECTION_STRING;
+
+const client = new MongoClient(uri);
+await client.connect();
+const dbName = "petshop";
+const collectionName = "clientes";
+const database = client.db(dbName);
+const collection = database.collection(collectionName);
 
 export default async function handler(req, res) {
-    console.log(req.method)
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
     if (req.method === 'GET') {
-        db.all(`select * from clientes where id = ${req.query.id}`, (err, rows) => {
-            if (err) {
-                console.error(err.message);
-                res.status(500).send(err.message);
-                return;
-            }
-            res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
-            res.setHeader('Pragma', 'no-cache');
-            res.setHeader('Expires', '0');
 
-            res.json(rows[0] || null);
-        })
+        const id = req.query.id;
+        const findQuery = { _id: ObjectId.createFromHexString(id) };
+        const cliente = await collection.findOne(findQuery)
+        res.json(cliente ?? null);
+
         return;
     } else if (req.method === 'PUT') {
         const { nome_pet, nome_tutor, sexo_pet, endereco } = req.body;
-        db.run(`    update clientes 
-                    set nome_pet = ?,
-                        nome_tutor = ?,
-                        sexo_pet = ?,
-                        endereco = ?
-                    where id = ?
-        `,
-            [nome_pet, nome_tutor, sexo_pet, endereco, req.query.id],
-            (err) => {
-                if (err) {
-                    res.status(500).json({ error: err.message });
-                    return;
-                }
-                res.status(201).end();
 
-            })
+        const id = req.query.id;
+        const findQuery = { _id: ObjectId.createFromHexString(id) };
+
+        await collection.findOneAndUpdate(findQuery, {
+            $set: {
+                nome_pet: nome_pet,
+                nome_tutor: nome_tutor,
+                sexo_pet: sexo_pet,
+                endereco: endereco
+            }
+        })
+
+        res.status(201).end();
         return;
     } else if (req.method === 'DELETE') {
-        db.run(`    delete from clientes 
-                    where id = ?
-        `,
-            [req.query.id],
-            (err) => {
-                if (err) {
-                    res.status(500).json({ error: err.message });
-                    return;
-                }
-                res.status(201).end();
 
-            })
+        const id = req.query.id;
+        const findQuery = { _id: ObjectId.createFromHexString(id) };
+        await collection.deleteOne(findQuery)
+        res.status(201).end();
 
         return;
     }

@@ -48,7 +48,7 @@ export default function Page({ params: { id } }) {
       <div>
         <p><strong>Nome pet</strong>: {cliente.nome_pet}</p>
         <p><strong>Nome tutor</strong>: {cliente.nome_tutor}</p>
-        <p><strong>Sexo pet</strong>: {cliente.sexo}</p>
+        <p><strong>Sexo pet</strong>: {cliente.sexo_pet}</p>
         <p><strong>Endereço</strong>: {cliente.nome_pet}</p>
       </div>
       <div className={styles.principal}>

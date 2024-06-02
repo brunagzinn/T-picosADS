@@ -1,13 +1,23 @@
-/* LISTAGEM DE CLIENTES/PETS */
+"use client"
+import { useEffect, useState } from "react";
 import styles from "./clientes.modulo.css"
 import Link from 'next/link'
 
 async function buscarClientes() {
-    const resposta = await fetch("http://localhost:3000/api/clientes");
+    const resposta = await fetch("http://localhost:3000/api/clientes", {
+        cache: "no-store"
+    });
     return await resposta.json();
 }
-export default async function Page() {
-    const clientes = await buscarClientes();
+export default function Page() {
+    const [clientes, setClientes] = useState([]);
+
+    useEffect(() => {
+        buscarClientes().then(results => {
+            setClientes(results);
+        })
+    }, [])
+
     return (
         <>
             <h1>Loja Pets</h1>
@@ -25,8 +35,8 @@ export default async function Page() {
                 <tbody>
                     {
                         clientes.map((cliente) =>
-                            <tr key={cliente.id}>
-                                <td><Link href={`/clientes/${cliente.id}/editar`}>Editar</Link> | <Link href={`/clientes/${cliente.id}/excluir`}>Excluir</Link></td>
+                            <tr key={cliente._id}>
+                                <td><Link href={`/clientes/${cliente._id}/editar`}>Editar</Link> | <Link href={`/clientes/${cliente._id}/excluir`}>Excluir</Link></td>
                                 <td>{cliente.nome_pet}</td>
                                 <td>{cliente.nome_tutor}</td>
                                 <td>{cliente.sexo_pet}</td>

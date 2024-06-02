@@ -19,7 +19,7 @@ async function buscarDashboard() {
     return await resposta.json();
 }
 export default function Dashboard() {
-    const [clientes, setClientes] = useState();
+    const [clientes, setClientes] = useState([]);
     useEffect(() => {
         async function fetchData() {
             const data = await buscarDashboard();
@@ -28,11 +28,8 @@ export default function Dashboard() {
         fetchData()
     }, [])
 
-    if (!clientes) return <></>;
-
-
     const data = {
-        labels: clientes.map((cliente) => cliente.sexo_pet),
+        labels: clientes.map((cliente) => cliente._id),
         datasets: [
           {
             label: "Pets por sexo",
