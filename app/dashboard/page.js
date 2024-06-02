@@ -1,39 +1,53 @@
+"use client";
+import {
+    Chart as ChartJS,  
+    BarElement, 
+    CategoryScale,
+    LinearScale
+} from "chart.js";
+import { useEffect, useState } from "react";
+import { Bar } from "react-chartjs-2";
+
+ChartJS.register(
+    CategoryScale,
+    BarElement,
+    LinearScale
+);
+
 async function buscarDashboard() {
     const resposta = await fetch("http://localhost:3000/api/clientes/dashboard");
     return await resposta.json();
 }
-export default async function Dashboard() {
-    const clientes = await buscarDashboard();
-    console.log(clientes)
+export default function Dashboard() {
+    const [clientes, setClientes] = useState();
+    useEffect(() => {
+        async function fetchData() {
+            const data = await buscarDashboard();
+            setClientes(data);
+        }
+        fetchData()
+    }, [])
+
+    if (!clientes) return <></>;
+
+
+    const data = {
+        labels: clientes.map((cliente) => cliente.sexo_pet),
+        datasets: [
+          {
+            label: "Pets por sexo",
+            data: clientes.map((cliente) => cliente.pets),
+            borderColor: "orange",
+            borderWidth: 2,
+            pointRadius: 4,
+          },
+        ],
+      };
+
     return (
         <>
             <h1>Dashboard</h1>
-            <table>
-                <thead>
-                    <tr>
-                        <th>
-                            Pets
-                        </th>
-                        <th>
-                            Sexo
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        clientes.map((cliente) =>
-                            <tr key={cliente.sexo_pet}>
-                                <td>
-                                    {cliente.pets}
-                                </td>
-                                <td>
-                                    {cliente.sexo_pet}
-                                </td>
-                            </tr>
-                        )
-                    }
-                </tbody>
-            </table>
+            <Bar data={data} />
         </>
     )
 }
