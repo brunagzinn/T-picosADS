@@ -8,10 +8,10 @@ import styles from "../clientes.modulo.css"
 export default function Criar() {
     const router = useRouter();
 
-    const [nome_pet, setNome_Pet] = useState("");
-    const [nome_tutor, setNome_Tutor] = useState("");
-    const [sexo_pet, setSexo_Pet] = useState("");
-    const [endereco, setEndereco] = useState("");
+    const [nome_pet, setNome_Pet] = useState();
+    const [nome_tutor, setNome_Tutor] = useState();
+    const [sexo_pet, setSexo_Pet] = useState();
+    const [endereco, setEndereco] = useState();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -31,8 +31,13 @@ export default function Criar() {
             router.push("/clientes")
         }
         else {
-            alert("Erro ao adicionar cliente")
-        }
+            const erros = await resposta.json();
+            if (erros && erros.length > 0) {
+                alert(erros.join('\n'));
+            } else {
+                alert("Erro ao adicionar cliente");
+            }
+        }        
     }
 
     return (

@@ -22,14 +22,28 @@ export default async function handler(req, res) {
 
         const { nome_pet, nome_tutor, sexo_pet, endereco } = req.body;
 
-        collection.insertOne({
-            nome_pet: nome_pet,
-            nome_tutor: nome_tutor,
-            sexo_pet: sexo_pet,
-            endereco: endereco
-        })
-        res.status(201).end();
-        return;
+        try {
+            await collection.insertOne({
+                nome_pet: nome_pet,
+                nome_tutor: nome_tutor,
+                sexo_pet: sexo_pet,
+                endereco: endereco
+            })
+            res.status(201).end();
+            return;
+        }
+        catch (error) {
+            if (error.errInfo.details.schemaRulesNotSatisfied) {
+                const validacoes = error.errInfo.details.schemaRulesNotSatisfied.map((item) => item.propertiesNotSatisfied)
+                
+                
+                res.status(400).json(validacoes[0].map((item) => item.description));
+                return;
+            }
+            res.staus(500).json(error)
+            return;
+        }
+
     }
 
     res.status(405).end();

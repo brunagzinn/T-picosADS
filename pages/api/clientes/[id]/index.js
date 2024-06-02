@@ -28,17 +28,29 @@ export default async function handler(req, res) {
         const id = req.query.id;
         const findQuery = { _id: ObjectId.createFromHexString(id) };
 
-        await collection.findOneAndUpdate(findQuery, {
-            $set: {
-                nome_pet: nome_pet,
-                nome_tutor: nome_tutor,
-                sexo_pet: sexo_pet,
-                endereco: endereco
-            }
-        })
+        try {
+            await collection.findOneAndUpdate(findQuery, {
+                $set: {
+                    nome_pet: nome_pet,
+                    nome_tutor: nome_tutor,
+                    sexo_pet: sexo_pet,
+                    endereco: endereco
+                }
+            })
 
-        res.status(201).end();
-        return;
+            res.status(201).end();
+            return;
+        }
+        catch (error) {
+            if (error.errInfo.details.schemaRulesNotSatisfied) {
+                const validacoes = error.errInfo.details.schemaRulesNotSatisfied.map((item) => item.propertiesNotSatisfied)
+
+                res.status(400).json(validacoes[0].map((item) => item.description));
+                return;
+            }
+            res.staus(500).json(error)
+            return;
+        }
     } else if (req.method === 'DELETE') {
 
         const id = req.query.id;

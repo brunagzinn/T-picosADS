@@ -19,11 +19,11 @@ export default function Editar({ params: { id } }) {
   const router = useRouter();
   const [cliente, setCliente] = useState({ nome_pet: '' })
   useEffect(() => {
-      async function fetchData() {
-          const data = await buscarCliente(id)
-          setCliente(data)
-      }
-      fetchData()
+    async function fetchData() {
+      const data = await buscarCliente(id)
+      setCliente(data)
+    }
+    fetchData()
   }, [id])
 
   const handleChange = (event) => {
@@ -33,6 +33,11 @@ export default function Editar({ params: { id } }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (cliente.nome_pet === "") cliente.nome_pet = null;
+    if (cliente.nome_tutor === "") cliente.nome_tutor = null;
+    if (cliente.sexo_pet === "") cliente.sexo_pet = null;
+    if (cliente.endereco === "") cliente.endereco = null;
+    
     const resposta = await fetch(`http://localhost:3000/api/clientes/${id}`, {
       method: "PUT",
       headers: {
@@ -44,7 +49,12 @@ export default function Editar({ params: { id } }) {
       router.push("/clientes")
     }
     else {
-      alert("Erro ao editar cliente")
+      const erros = await resposta.json();
+      if (erros && erros.length > 0) {
+        alert(erros.join('\n'));
+      } else {
+        alert("Erro ao editar cliente");
+      }
     }
   }
 
