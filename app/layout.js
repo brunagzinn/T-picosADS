@@ -21,6 +21,9 @@ export default function RootLayout({ children }) {
       <li>
         <Link href="/clientes">Clientes</Link>
       </li>
+      <li>
+        <Link href="/dashboard">Dashboard</Link>
+      </li>
       <li className='right'>
         <Link href="/sobre">Sobre</Link></li>
     </ul>
