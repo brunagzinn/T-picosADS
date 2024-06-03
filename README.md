@@ -1,3 +1,11 @@
+# Rodando a aplicação
+
+Execute os seguintes comandos na raiz do projeto (pasta onde se encontra o package.json)
+```shell
+npm install
+npm run dev
+```
+
 # Petshop API
 
 ## Endpoints
