@@ -14,7 +14,7 @@ export default async function handler(req, res) {
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', '0');
-    if (req.method === 'GET') {
+    if (req.method === 'GET') { // consultar registro individual
 
         const id = req.query.id;
         const findQuery = { _id: ObjectId.createFromHexString(id) };
@@ -22,7 +22,7 @@ export default async function handler(req, res) {
         res.json(cliente ?? null);
 
         return;
-    } else if (req.method === 'PUT') {
+    } else if (req.method === 'PUT') { // editar dados
         const { nome_pet, nome_tutor, sexo_pet, endereco } = req.body;
 
         const id = req.query.id;
@@ -51,7 +51,7 @@ export default async function handler(req, res) {
             res.staus(500).json(error)
             return;
         }
-    } else if (req.method === 'DELETE') {
+    } else if (req.method === 'DELETE') { // excluir dados
 
         const id = req.query.id;
         const findQuery = { _id: ObjectId.createFromHexString(id) };

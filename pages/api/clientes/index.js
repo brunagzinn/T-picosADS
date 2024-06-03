@@ -13,12 +13,12 @@ export default async function handler(req, res) {
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', '0');
-    if (req.method === 'GET') {
+    if (req.method === 'GET') { // consultar um grupo de registros
         const clientes = await collection.find().toArray();
 
         res.json(clientes);
         return;
-    } else if (req.method === 'POST') {
+    } else if (req.method === 'POST') { // adicionar dados
 
         const { nome_pet, nome_tutor, sexo_pet, endereco } = req.body;
 
@@ -34,9 +34,7 @@ export default async function handler(req, res) {
         }
         catch (error) {
             if (error.errInfo.details.schemaRulesNotSatisfied) {
-                const validacoes = error.errInfo.details.schemaRulesNotSatisfied.map((item) => item.propertiesNotSatisfied)
-                
-                
+                const validacoes = error.errInfo.details.schemaRulesNotSatisfied.map((item) => item.propertiesNotSatisfied)                
                 res.status(400).json(validacoes[0].map((item) => item.description));
                 return;
             }
